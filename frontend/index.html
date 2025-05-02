@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Decentralized Lottery</title>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.min.js"></script>
+    <script defer src="app.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 2rem;
+        max-width: 600px;
+        margin: auto;
+      }
+      button {
+        margin: 0.5rem 0;
+        padding: 0.5rem 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🎲 Decentralized Lottery</h1>
+    <p><strong>Manager:</strong> <span id="manager">Loading...</span></p>
+    <p><strong>Players:</strong> <span id="players">Loading...</span></p>
+    <p><strong>Balance:</strong> <span id="balance">Loading...</span></p>
+
+    <button id="connect">🔌 Connect Wallet</button><br />
+    <button id="enter">🎟️ Enter Lottery</button><br />
+    <button id="pick">🏆 Pick Winner</button><br />
+
+    <p><strong>Last Winner:</strong> <span id="winner">Loading...</span></p>
+  </body>
+</html>
