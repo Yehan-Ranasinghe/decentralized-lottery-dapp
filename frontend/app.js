@@ -22,54 +22,84 @@ async function init() {
     signer = await provider.getSigner();
     contract = new ethers.Contract(contractAddress, abi, signer);
 
-    updateUI();
+    await checkNetwork();
+    await updateUI();
   } catch (error) {
     console.error('Error during init:', error);
-    alert('Connection failed.');
+    alert('Connection failed. See console for details.');
+  }
+}
+
+async function checkNetwork() {
+  const network = await provider.getNetwork();
+  const expectedChainId = 5; // Goerli testnet
+
+  if (network.chainId !== expectedChainId) {
+    alert(
+      `Please switch MetaMask to the Goerli testnet (chainId: ${expectedChainId}). Currently connected to chainId: ${network.chainId}.`
+    );
+    throw new Error('Wrong network');
   }
 }
 
 async function updateUI() {
+  if (!contract) {
+    console.warn('Contract is not initialized');
+    return;
+  }
+
   try {
     const manager = await contract.manager();
     const players = await contract.getPlayers();
     const balance = await contract.getBalance();
     const winner = await contract.lastWinner();
 
+    console.log('Manager:', manager);
+    console.log('Players:', players);
+    console.log('Balance (wei):', balance.toString());
+    console.log('Winner:', winner);
+
     document.getElementById('manager').innerText = manager;
     document.getElementById('players').innerText = players.length;
     document.getElementById('balance').innerText =
       ethers.formatEther(balance) + ' ETH';
     document.getElementById('winner').innerText = winner;
-
-    const userAddress = await signer.getAddress();
-    document.getElementById('pick').style.display =
-      userAddress.toLowerCase() === manager.toLowerCase() ? 'block' : 'none';
   } catch (error) {
     console.error('Error updating UI:', error);
+    alert('Failed to load contract data. Check console for details.');
   }
 }
 
 document.getElementById('connect').onclick = init;
 
 document.getElementById('enter').onclick = async () => {
+  if (!contract) {
+    alert('Please connect your wallet first.');
+    return;
+  }
+
   try {
     const tx = await contract.enter({ value: ethers.parseEther('0.01') });
     await tx.wait();
     alert('🎟️ Ticket purchased!');
-    updateUI();
+    await updateUI();
   } catch (error) {
     console.error('Enter failed:', error);
-    alert('❌ Failed to enter. Check your wallet.');
+    alert('❌ Failed to enter. Check your wallet and try again.');
   }
 };
 
 document.getElementById('pick').onclick = async () => {
+  if (!contract) {
+    alert('Please connect your wallet first.');
+    return;
+  }
+
   try {
     const tx = await contract.pickWinner();
     await tx.wait();
     alert('🏆 Winner picked!');
-    updateUI();
+    await updateUI();
   } catch (error) {
     console.error('Pick winner failed:', error);
     alert('❌ Only the manager can pick a winner.');
