@@ -7,48 +7,42 @@ contract Lottery {
     address public lastWinner;
     uint public ticketPrice;
 
-    constructor(uint _ticketPrice) {
+    constructor() {
         manager = msg.sender;
-        ticketPrice = _ticketPrice; // in wei
-    }
-
-    modifier onlyManager() {
-        require(msg.sender == manager, "Only manager can call this.");
-        _;
+        ticketPrice = 0.01 ether; // default price
     }
 
     function enter() public payable {
-        require(msg.value == ticketPrice, "Incorrect ETH amount.");
+        require(msg.value == ticketPrice, "Must send exact ticket price");
         players.push(msg.sender);
-        emit PlayerEntered(msg.sender);
     }
 
-    function getBalance() public view onlyManager returns (uint) {
-        return address(this).balance;
+    function setTicketPrice(uint _price) public {
+        require(msg.sender == manager, "Only manager can set the ticket price");
+        require(_price > 0, "Price must be greater than 0");
+        ticketPrice = _price;
     }
 
     function getPlayers() public view returns (address[] memory) {
         return players;
     }
 
-    function pickWinner() public onlyManager {
-        require(players.length > 0, "No players in the lottery.");
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
+    }
+
+    function pickWinner() public {
+        require(msg.sender == manager, "Only manager can pick winner");
+        require(players.length > 0, "No players");
+
         uint index = random() % players.length;
         address winner = players[index];
         payable(winner).transfer(address(this).balance);
         lastWinner = winner;
-        emit WinnerSelected(winner);
-
-        // reset for next round
         delete players;
     }
 
     function random() private view returns (uint) {
-        // Not secure but okay for a basic version
-        return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, players)));
+    return uint(keccak256(abi.encodePacked(block.prevrandao, block.timestamp, players)));
     }
-
-    event PlayerEntered(address indexed player);
-    event WinnerSelected(address indexed winner);
 }
-
