@@ -5,87 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Decentralized Lottery</title>
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        padding: 2rem;
-        max-width: 600px;
-        margin: auto;
-        background-color: #f8f9fa;
-        color: #333;
-      }
-
-      h1 {
-        color: #4b0082;
-        margin-bottom: 1rem;
-      }
-
-      button {
-        margin: 0.5rem 0;
-        padding: 0.6rem 1.2rem;
-        font-size: 1rem;
-        border: none;
-        background-color: #4b0082;
-        color: white;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-      }
-
-      button:hover {
-        background-color: #370062;
-      }
-
-      button:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-      }
-
-      #pick-container {
-        margin-top: 1rem;
-      }
-
-      ul {
-        padding-left: 1.2rem;
-      }
-
-      li {
-        margin-bottom: 0.25rem;
-      }
-
-      .section {
-        margin-bottom: 1rem;
-      }
-    </style>
+    <script src="app.js" defer></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
   </head>
-  <body>
-    <h1>🎲 Decentralized Lottery</h1>
+  <body class="bg-gray-100 text-gray-800 font-sans">
+    <div class="max-w-3xl mx-auto p-6">
+      <div class="bg-white shadow-lg rounded-lg p-6 space-y-6">
+        <h1 class="text-3xl font-bold text-center">🎰 Decentralized Lottery</h1>
 
-    <div class="section">
-      <p><strong>Manager:</strong> <span id="manager">Loading...</span></p>
-      <p id="role-message">Checking role...</p>
-    </div>
+        <!-- Wallet Connect -->
+        <div class="flex justify-center">
+          <button
+            id="connect"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+          >
+            Connect Wallet
+          </button>
+        </div>
 
-    <div class="section">
-      <p>
-        <strong>Players (<span id="players-count">0</span>):</strong>
-      </p>
-      <ul id="players-list"></ul>
-    </div>
+        <p id="role-message" class="text-center text-sm text-gray-600">
+          Please connect your wallet
+        </p>
 
-    <div class="section">
-      <p><strong>Balance:</strong> <span id="balance">Loading...</span></p>
-      <p><strong>Last Winner:</strong> <span id="winner">Loading...</span></p>
-    </div>
+        <hr class="my-4" />
 
-    <div class="section">
-      <button id="connect">🔌 Connect Wallet</button><br />
-      <button id="enter" disabled>🎟️ Enter Lottery</button><br />
-      <div id="pick-container" style="display: none">
-        <button id="pick">🏆 Pick Winner</button><br />
+        <!-- Stats Section -->
+        <div class="space-y-4">
+          <div>
+            <p>
+              <strong>🎩 Manager:</strong> <span id="manager">Loading...</span>
+            </p>
+            <p><strong>🏆 Last Winner:</strong> <span id="winner">N/A</span></p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <p>
+              <strong>👥 Players:</strong> <span id="players-count">0</span>
+            </p>
+            <p><strong>💰 Balance:</strong> <span id="balance">0 ETH</span></p>
+            <p>
+              <strong>🎟️ Ticket Price:</strong>
+              <span id="ticket-price">Loading...</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Enter Lottery -->
+        <div class="flex justify-center">
+          <button
+            id="enter"
+            disabled
+            class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded"
+          >
+            🎟️ Enter Lottery
+          </button>
+        </div>
+
+        <!-- Manager Controls -->
+        <div
+          id="price-update-container"
+          class="bg-gray-50 border border-gray-300 rounded-lg p-4"
+          style="display: none"
+        >
+          <h3 class="text-lg font-semibold mb-2">⚙️ Manager Controls</h3>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input
+              type="text"
+              id="new-ticket-price"
+              placeholder="New ticket price in ETH"
+              class="flex-1 px-3 py-2 border border-gray-300 rounded w-full"
+            />
+            <button
+              id="update-price-btn"
+              class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded"
+            >
+              Update Price
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="pick-container"
+          class="flex justify-center"
+          style="display: none"
+        >
+          <button
+            id="pick"
+            class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded"
+          >
+            🏆 Pick Winner
+          </button>
+        </div>
+
+        <hr class="my-4" />
+
+        <!-- Players List -->
+        <div>
+          <h2 class="text-xl font-semibold mb-2">Participants</h2>
+          <ul
+            id="players-list"
+            class="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-1 text-sm"
+          >
+            <!-- Player addresses will appear here -->
+          </ul>
+        </div>
       </div>
     </div>
-
-    <script src="app.js" defer></script>
   </body>
 </html>
