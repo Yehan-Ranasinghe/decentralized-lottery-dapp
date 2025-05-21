@@ -24,8 +24,9 @@ This is a decentralized lottery application built for COMP4541. Users can enter 
 ## 🔗 Live Demo
 
 ➡️ [https://yehan-ranasinghe.github.io/decentralized-lottery-dapp/]
+
 ## 🔗 Contract Address
 
-🧾 `0x...` (on Sepolia)
+🧾 `0x8d75d042db4cd44f6a547c010757ab87e60b2954` (on Sepolia)
 
 ## 📁 Structure
