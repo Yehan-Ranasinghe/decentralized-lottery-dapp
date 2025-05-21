@@ -82,7 +82,8 @@ async function updateUI(
   currentUser,
   ticketPrice
 ) {
-  document.getElementById('manager').innerText = manager;
+  // Hide manager address from UI for privacy
+  document.getElementById('manager').innerText = '🔒 Hidden';
   document.getElementById('players-count').innerText = players.length;
   document.getElementById('balance').innerText = `${ethers.formatEther(
     balance
