@@ -72,8 +72,16 @@ const pickBtn = document.getElementById('pick');
 const pickContainer = document.getElementById('pick-container');
 const updatePriceBtn = document.getElementById('update-price-btn');
 const priceUpdateContainer = document.getElementById('price-update-container');
+const ticketPriceDisplay = document.getElementById('ticket-price'); // New element
 
-async function updateUI(manager, players, balance, winner, currentUser) {
+async function updateUI(
+  manager,
+  players,
+  balance,
+  winner,
+  currentUser,
+  ticketPrice
+) {
   document.getElementById('manager').innerText = manager;
   document.getElementById('players-count').innerText = players.length;
   document.getElementById('balance').innerText = `${ethers.formatEther(
@@ -81,6 +89,7 @@ async function updateUI(manager, players, balance, winner, currentUser) {
   )} ETH`;
   document.getElementById('winner').innerText =
     winner === ethers.ZeroAddress ? 'N/A' : winner;
+  ticketPriceDisplay.innerText = `${ethers.formatEther(ticketPrice)} ETH`; // Show ticket price
 
   const list = document.getElementById('players-list');
   list.innerHTML = '';
@@ -102,13 +111,14 @@ async function updateUI(manager, players, balance, winner, currentUser) {
 
 async function refreshData() {
   const currentUser = await signer.getAddress();
-  const [manager, players, balance, winner] = await Promise.all([
+  const [manager, players, balance, winner, ticketPrice] = await Promise.all([
     lottery.manager(),
     lottery.getPlayers(),
     lottery.getBalance(),
     lottery.lastWinner(),
+    lottery.ticketPrice(),
   ]);
-  await updateUI(manager, players, balance, winner, currentUser);
+  await updateUI(manager, players, balance, winner, currentUser, ticketPrice);
 }
 
 async function loadContract() {
